@@ -1,0 +1,11 @@
+package {packagename}
+
+public class {classname}
+{
+	{fields}
+
+	public {classname}({params})
+	{
+		{constructorbody}
+	}
+}
