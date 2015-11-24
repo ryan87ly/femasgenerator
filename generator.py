@@ -79,6 +79,6 @@ if __name__ == "__main__":
 	typeMapping = readDataType("USTPFtdcUserApiDataType.h")
 	allStructs = readDataStruct("USTPFtdcUserApiStruct.h")
 	for s in allStructs:
-		classWriter.write(typeMapping, s, "com.ullink", "struct")
+		classWriter.write(typeMapping, s, "com.ullink", "struct", True)
 
 

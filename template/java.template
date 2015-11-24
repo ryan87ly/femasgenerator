@@ -2,10 +2,12 @@ package {packagename}
 
 public class {classname}
 {
-	{fields}
+{fields}
 
 	public {classname}({params})
 	{
 		{constructorbody}
 	}
+
+{getters}
 }
