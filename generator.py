@@ -75,10 +75,10 @@ def parseField(line):
 	return FieldInfo(g[0], g[1])
 
 if __name__ == "__main__":
-	classWriter = ClassWriter("template/java.template")
+	classWriter = ClassWriter("template/java.template", True)
 	typeMapping = readDataType("USTPFtdcUserApiDataType.h")
 	allStructs = readDataStruct("USTPFtdcUserApiStruct.h")
 	for s in allStructs:
-		classWriter.write(typeMapping, s, "com.ullink", "struct", True)
+		classWriter.write(typeMapping, s, "com.ullink.jni.femas.wrapper.struct.mapping", "struct", False)
 
 
