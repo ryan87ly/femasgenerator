@@ -25,6 +25,57 @@ class StructInfo:
 	def __str__(self):
 		return self.structName + "{\n" + '\n'.join(str(f) for f in self.fields) + "\n}"
 
+class ApiMethodInfo:
+	def __init__(self, methodName, fields, returnType):
+		self.methodName = methodName
+		self.fields = fields
+		self.returnType = returnType
+
+
+class ApiInfo:
+	def __init__(self, apiName, methods):
+		self.apiName = apiName
+		self.methods = methods
+
+	@staticmethod
+	def parseApiInfos(filename):
+		file = open(filename, 'r')
+		content = file.read()
+		p = list(re.finditer(r"class[^{]+", content))
+		print len(p)
+		#print p[0].group(0)
+		ApiInfo.parseApiInfo(content, p[0].start())
+
+	@staticmethod
+	def parseApiInfo(content, startIndex):
+		classBlock = ApiInfo.parseClassBlock(content, startIndex)
+		print classBlock
+		lines = str.split(classBlock, "\n")
+		className = re.split("\s+", lines[0])[-1]
+		print className
+		print lines[4]
+		f = lambda s: re.match(r".*(void|int)\s+(\w+)\(([\w\s,\*]*)\)", s) != None
+		filtered = filter(f, lines)
+		print len(filtered)
+		#print p.groups()
+		
+
+	@staticmethod
+	def parseClassBlock(content, startIndex):
+		index = str.find(content, '{', startIndex) + 1
+		leftBracketNum = 1
+		rightBracketNum = 0
+		while leftBracketNum > rightBracketNum:
+			if content[index] == '{':
+				leftBracketNum = leftBracketNum + 1
+			elif content[index] == '}':
+				rightBracketNum = rightBracketNum + 1
+			index = index + 1
+		return content[startIndex : index]
+
+
+
+
 def readDataType(filename):
 	file = open(filename, 'r')
 	lines = file.readlines()
@@ -54,7 +105,6 @@ def readDataStruct(filename):
 	p = pattern.findall(content)
 	return map(parseDataStruct, p)
 
-
 #return StructInfo
 def parseDataStruct(struct):
 	pattern = re.compile(r"struct\s+([^;,{}]+)\s{(.*)}", re.DOTALL)
@@ -75,10 +125,12 @@ def parseField(line):
 	return FieldInfo(g[0], g[1])
 
 if __name__ == "__main__":
+	'''
 	classWriter = ClassWriter("template/java.template", True)
 	typeMapping = readDataType("USTPFtdcUserApiDataType.h")
 	allStructs = readDataStruct("USTPFtdcUserApiStruct.h")
 	for s in allStructs:
 		classWriter.write(typeMapping, s, "com.ullink.jni.femas.wrapper.struct.mapping", "struct", False)
-
+	'''
+	ApiInfo.parseApiInfos("USTPFtdcTraderApi.h")
 
